@@ -12,7 +12,7 @@
 
 | 항목 | 값 |
 |---|---|
-| Foundry 계정 / 프로젝트 | `cog-leqsyibovgge2` / `incident-proj` |
+| Foundry 계정 / 프로젝트 | `azd env get-value AZURE_AI_ACCOUNT_NAME` / `azd env get-value AZURE_AI_PROJECT_NAME`로 확인 |
 | 에이전트 | `optimization-customer-support-python-responses` |
 | 데이터셋 | `eval` (v1.0, `eval.jsonl`과 내용 동일) |
 | 채점 모델 | `gpt-4.1` |

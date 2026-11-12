@@ -18,6 +18,7 @@ After optimization:
 import asyncio
 import logging
 import os
+from pathlib import Path
 
 from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
@@ -35,7 +36,7 @@ from azure.ai.agentserver.responses.models import (
     ResponseUsageOutputTokensDetails,
 )
 
-from azure.ai.agentserver.optimization import load_config
+from azure.ai.agentserver.optimization import load_config, load_skills_from_dir
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("customer-support-agent")
@@ -63,10 +64,27 @@ MODEL = (
     or os.getenv("AZURE_AI_MODEL_DEPLOYMENT_NAME")
     or "gpt-5.4-mini"
 )
-ALL_INSTRUCTIONS = config.compose_instructions()
+
+# Local configs only set skills_dir; inline/API configs already populate skills.
+if not config.skills and config.skills_dir:
+    config.skills.extend(load_skills_from_dir(Path(config.skills_dir)))
+
+
+def _compose_with_skill_bodies(cfg) -> str:
+    # compose_instructions() lists only name/description; there is no tool to fetch bodies, so inline them.
+    parts = [cfg.instructions or FALLBACK_INSTRUCTIONS]
+    if cfg.skills:
+        parts.append("## Skills\nApply the matching skill when the request fits its description.")
+        for s in cfg.skills:
+            parts.append(f"### Skill: {s.name}\nWhen to use: {s.description}\n\n{(s.body or '').strip()}")
+    return "\n\n".join(parts)
+
+
+ALL_INSTRUCTIONS = _compose_with_skill_bodies(config)
 
 logger.info(
-    "Config loaded (source=%s, model=%s)", config.source, MODEL
+    "Config loaded (source=%s, model=%s, skills=%s, prompt_len=%d)",
+    config.source, MODEL, [s.name for s in config.skills], len(ALL_INSTRUCTIONS),
 )
 
 # ── Foundry client ────────────────────────────────────────────────────────────
