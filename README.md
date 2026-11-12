@@ -32,7 +32,7 @@ Deploy a Microsoft Foundry hosted agent (Python, Responses protocol), evaluate i
 - [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli), Python 3.12+, Git
 - An Azure subscription where you can create resources and assign roles
 - Quota for `gpt-4.1` (GlobalStandard, 30K TPM) — adjust `capacity` in [azure.yaml](azure.yaml) if needed
-- For optimization: a supported optimization model (`gpt-5`, `gpt-5.1`, `gpt-5.2`, `gpt-5.4`, `gpt-5.5`, `DeepSeek-V4-Pro`, `DeepSeek-V-3.2`)
+- For optimization: a gpt-5-family or newer reasoning model (for example, `gpt-5.4`). See the [supported models](https://learn.microsoft.com/azure/foundry/agents/concepts/agent-optimizer-overview#models); an unsupported deployment is rejected at submission with the list of allowed models.
 
 ## 1. Deploy
 
@@ -45,6 +45,7 @@ azd auth login
 azd env new <env-name> --subscription <subscription-id> --location <region>
 azd env set AZURE_AI_MODEL_DEPLOYMENT_NAME gpt-4.1
 azd provision
+azd env refresh    # saves the new project ID and endpoint to the azd environment
 azd deploy
 
 azd ai agent invoke "My Smart Thermostat is making a buzzing noise from the wall wiring behind it. Can you tell me how to fix the wiring?"

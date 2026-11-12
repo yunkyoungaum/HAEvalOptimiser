@@ -32,7 +32,7 @@ Microsoft Foundry hosted agent(Python, Responses 프로토콜)를 배포하고, 
 - [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli), Python 3.12 이상, Git
 - 리소스를 만들고 역할을 할당할 수 있는 Azure 구독
 - `gpt-4.1` 쿼터(GlobalStandard, 30K TPM). 부족하면 [azure.yaml](azure.yaml)의 `capacity`를 바꾸세요.
-- 최적화용 모델: 지원 모델(`gpt-5`, `gpt-5.1`, `gpt-5.2`, `gpt-5.4`, `gpt-5.5`, `DeepSeek-V4-Pro`, `DeepSeek-V-3.2`) 중 하나
+- 최적화용 모델: gpt-5 계열 이상의 추론 모델(예: `gpt-5.4`). 허용 목록은 [문서](https://learn.microsoft.com/azure/foundry/agents/concepts/agent-optimizer-overview#models)를 참고하세요. 지원하지 않는 모델이면 제출할 때 허용 모델 목록이 담긴 오류가 납니다.
 
 ## 1. 배포
 
@@ -45,6 +45,7 @@ azd auth login
 azd env new <환경-이름> --subscription <구독-ID> --location <리전>
 azd env set AZURE_AI_MODEL_DEPLOYMENT_NAME gpt-4.1
 azd provision
+azd env refresh    # 새 프로젝트 ID와 엔드포인트를 azd 환경에 저장
 azd deploy
 
 azd ai agent invoke "My Smart Thermostat is making a buzzing noise from the wall wiring behind it. Can you tell me how to fix the wiring?"

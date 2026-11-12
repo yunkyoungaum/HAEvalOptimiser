@@ -3,3 +3,4 @@
 __pycache__/
 *.pyc
 .env
+evals/optimizer-issue-report.md
