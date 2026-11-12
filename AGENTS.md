@@ -4,7 +4,9 @@ This project is a **Microsoft Foundry hosted agent** — a containerized AI agen
 
 ## Key files
 
-- `Dockerfile` — container definition
+- `azure.yaml` — azd project (model deployment, hosted agent, evaluation service)
+- `src/optimization-customer-support-python-responses/main.py` — agent entry point
+- `evals/azure.eval.yaml` — evaluation definition reused by the optimizer
 
 ## Development workflow
 

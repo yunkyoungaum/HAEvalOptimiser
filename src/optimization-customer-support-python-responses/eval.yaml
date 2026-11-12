@@ -1,5 +1,0 @@
-name: customer-support-eval
-dataset:
-    local_uri: ./eval.jsonl
-evaluators:
-    - builtin.task_adherence
